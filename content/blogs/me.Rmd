@@ -4,7 +4,7 @@ date: '2020-10-20'
 description: Here you can learn read my autobiography and CV
 output:
   pdf_document: default
-  html_document:
+  html_document: 
     df_print: paged
 image: myphoto.jpg
 keywords: ''
