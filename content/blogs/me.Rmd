@@ -6,7 +6,7 @@ output:
   html_document: 
     df_print: paged
   pdf_document: default
-image: "myphoto.jpg"
+image: "short_photo.jpg"
 keywords: ''
 draft: no
 slug: me
