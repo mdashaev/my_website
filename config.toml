@@ -110,8 +110,8 @@ disqusShortname = ""
       url = "blogs/airbnb"
 
     [[params.tiles.showcase]]
-      title = "Project_4"
-      subtitle = "My other project"
+      title = "Comparing GDP of different countries"
+      subtitle = "Analysis of GDP dynamics of different countries"
       image = "pic04.jpg"
       url = "blogs/project4"
 

@@ -1,11 +1,12 @@
 ---
-title: "Comparing GDP of different countries"
+title: "GDP components over time and among countries"
 date: '2020-10-20'
 description: Comparing countries by GDP components over time
 output:
+  pdf_document: default
   html_document:
     df_print: paged
-image: pic07.jpg
+image: ''
 keywords: ''
 draft: no
 slug: project4
@@ -50,8 +51,6 @@ library(scales)
 library(car)
 
 ```
-
-# GDP components over time and among countries
 
 There are four main components of gross domestic product: personal consumption (C), business investment (I), government spending (G) and net exports (exports - imports). Here you can read more about GDP and the different approaches in calculating at the [Wikipedia GDP page](https://en.wikipedia.org/wiki/Gross_domestic_product).
 
