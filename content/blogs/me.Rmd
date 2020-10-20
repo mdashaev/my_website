@@ -33,6 +33,8 @@ knitr::opts_chunk$set(
 
 Hi, my name is Muslim Dashaev! 
 
+Here you can find [my CV](https://www.dropbox.com/s/0b0i4rzju1hooui/Dashaev%20CV.pdf?dl=0).
+
 I finished the double degree programme at Higher School of Economics and University of London under the academic direction of London School Economics with distinction. Later, I have been also working there as a teacher’s assistant in Management Accounting and as a class teacher in Microeconomics-1. I am really passionate about teaching becase I like to explain and make complex things easier for understanding. Since my undergraduate degree, I have been enthusiastic about finance courses which involved studying the valuation of fixed income instruments, hedging, and models to value interest rate risk. Motivated by what I studied in terms of my degree, I decided that I want to pursue a career in Investment Management. 
 
 I have working experience in Quantitative Risk Management at VTB Bank and Project Valuation at Sberbank of Russia. At VTB Bank I understood the true meaning of collaboration as I worked as a part of a team that constructs various survival models using machine learning in R. I was responsible for researching the best model and implementing it into the bank’s systems.
@@ -42,8 +44,3 @@ As I wanted to get more experience of working with clients and providing them op
 However, I always wanted to gain international experience and study in a diversified environment. Currently, I am a full-time Masters in Financial Analysis student at London Business School. I appreciate how much teachers focus on applying theory to solve real life problems. For instance, I have recently developed a quantitative trading strategy that uses ARIMA and GARCH to outperform Buy & Hold strategy. I am interested in Asset Management or Trading positions, and I believe that LBS will help me to expand my knowledge in financial markets.
 
 
-```{r CV_pic, echo=FALSE, out.width="90%",fig.width=1,fig.height=1,fig.align="center"}
-
-knitr::include_graphics("Dashaev_CV.jpg")
-
-```
