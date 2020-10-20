@@ -3,9 +3,9 @@ title: "Briefly about me"
 date: '2020-10-20'
 description: Here you can learn read my autobiography and CV
 output:
-  pdf_document: default
   html_document: 
     df_print: paged
+  pdf_document: default
 image: myphoto.jpg
 keywords: ''
 draft: no
@@ -44,7 +44,6 @@ However, I always wanted to gain international experience and study in a diversi
 
 ```{r CV_pic, echo=FALSE, out.width="90%",fig.width=1,fig.height=1,fig.align="center"}
 
-knitr::include_graphics(here::here("data", "Dashaev_CV.jpg"))
+knitr::include_graphics("Dashaev_CV.jpg")
 
-getwd()
 ```
