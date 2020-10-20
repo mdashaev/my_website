@@ -44,6 +44,7 @@ However, I always wanted to gain international experience and study in a diversi
 
 ```{r CV_pic, echo=FALSE, out.width="90%",fig.width=1,fig.height=1,fig.align="center"}
 
-knitr::include_graphics("Dashaev_CV.pdf")
+knitr::include_graphics(here::here("data", "Dashaev_CV.jpg"))
 
+getwd()
 ```
