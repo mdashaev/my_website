@@ -1,10 +1,11 @@
 ---
 title: "Project_4"
 date: '2020-10-20'
-description: TEST TEST TEST
-draft: no
+description: Comparing countries by GDP components over time
+output: pdf_document
 image: pic07.jpg
 keywords: ''
+draft: no
 slug: project4
 categories:
 - ''
@@ -44,6 +45,8 @@ library(infer)
 library(openintro)
 library(tidyquant)
 library(scales)
+library(car)
+
 ```
 
 # GDP components over time and among countries
@@ -88,11 +91,7 @@ of course!
 
 ```{r gdp1, out.width="100%", fig.width= 8, fig.height=5.5}
 
-library(car)
-
 options(scipen = 999)
-#view photo
-knitr::include_graphics(here::here("images", "gdp1.png"), error = FALSE)
 
 #recode is used to rename text rows: first argument is the column where we want to change names, then all replacements in rows
 tidy_GDP_data$IndicatorName <-  car::recode(tidy_GDP_data$IndicatorName, 
