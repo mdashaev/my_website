@@ -100,7 +100,7 @@ disqusShortname = ""
     [[params.tiles.showcase]]
       title = "Academic research"
       subtitle = "My Bachelor's thesis"
-      image = "thesis.png"
+      image = "thesis.jpg"
       url = "blogs/Demand uncertainty and ZL firms final.pdf"
 
     [[params.tiles.showcase]]
