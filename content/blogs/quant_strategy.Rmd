@@ -1,7 +1,7 @@
 ---
 title: "Forecasting EUR/USD FX rate using ARIMA & GARCH"
 date: '2020-10-20'
-description: Here you can learn read my autobiography and CV
+description: Here I forecast EUR/USD FX rate to outperform Buy & Hold Strategy
 output:
   html_document: 
     df_print: paged
@@ -14,6 +14,7 @@ categories:
 - ''
 - ''
 ---
+
 ```{r, setup, echo=FALSE}
 knitr::opts_chunk$set(
   message = FALSE, 
@@ -69,7 +70,7 @@ First of all, we upload data from the Yahoo Finance using R function getSymbols(
   # get data and initialize objects to hold forecasts
 # EURUSD <- read.csv('EURUSD=X', header = T)
 
-getSymbols("^EURUSD=X", from="2003-12-01")
+quantmod::getSymbols("EURUSD=X", from="2003-12-01", to = "2020-10-16")
 EURUSD <- `EURUSD=X`
 EURUSD <- rownames_to_column(as.data.frame(EURUSD), var = "date")
 EURUSD[, 1] <- as.Date(as.character(EURUSD[, 1]))
@@ -83,6 +84,11 @@ returns <- diff(log(EURUSD[,"EURUSD=X.Close"])) #calc difference in logs of euru
 returns <- na.omit(returns)
 # forecasts_eurusd <- forecasts
 
+rolling.window <- 1000
+forecast_length <- length(returns) - rolling.window
+forecasts <- vector(mode="numeric", length=forecast_length)
+
+
 ```
 
 In our model we have used k=1000 and downloaded the data from Yahoo finance. For example, first we consider the period 1-1000 and predict the returns for the day 1001, then we take period 2-1001 and predict for the day 1002, and so on. We also do not take into account transaction costs and slippage (where computer signals to enter/exit, and where the actual entry/exit was). We use these 1000 days of pricing data to forecast the price of the next day. And we do that over and over, while rolling our window forward (hence rolling window forecast) for each forecast we look simultaneously for the best ARIMA model with the lowest AIC (Akaike Information Criterion), our integration value d is equal to zero (since we have already taken the difference between logarithms), hence we are actually fitting ARMA and not ARIMA models. After observing the right ARIMA model, we can feed this into the next step, finding the right GARCH model.
@@ -90,10 +96,7 @@ In our model we have used k=1000 and downloaded the data from Yahoo finance. For
 Once this model specification step is completed, we can start to fit the ARIMA+GARCH model. R function ugarchfit() helps us here a lot as it optimizes the specification. In case the GARCH does not converge, we cannot say with certainty when the prediction is going to happen and need to guess the “long” entry point to the market. But if the model converges, then we have the date and the prediction. So far we have computed our forecasts and entry/exit points. What is now missing, are the returns. We will look at how to compute these in the following lines.
 
 
-```{r forecast_procedure}
-rolling.window <- 1000
-forecast_length <- length(returns) - rolling.window
-forecasts <- vector(mode="numeric", length=forecast_length)
+```{r forecast_procedure, eval = FALSE}
 
 # loop through every trading day, estimate optimal model parameters from rolling window
 # and predict next day's return
@@ -157,11 +160,15 @@ for (i in 0:forecast_length) {
 
 The code above runs about 8 hours so I provide you with the [output using the link](https://www.dropbox.com/s/bv9fsw4l6njl6l8/eur_usd_forecast.csv?dl=0).
 
-```{r forecast_upload, eval = FALSE}
+```{r forecast_upload}
 
-#in order to save time import the result of the loop
+url <- "https://www.dropbox.com/s/bv9fsw4l6njl6l8/eur_usd_forecast.csv?raw=1"
+
+forecasts <- vroom::vroom(url, delim = ",") # If vroom::vroom(url) doesn't work, use read_csv(url)
+
+#in order to save time import the result of the loop]]]
 forecasts <- read.csv("~/eur_usd_forecast.csv", dec=",")
-forecasts$X <- NULL #delete unnecessary variable
+forecasts[,1] <- NULL #delete unnecessary variable
 colnames(forecasts) <- c("forecast_returns")
 
 ```
@@ -170,7 +177,7 @@ In order to see what our strategy returns are, we need to calculate the intersec
 
 ```{r comparing_strategies}
 
-dates <- EURUSD[, 1]
+dates <- EURUSD$date
 forecasts.ts <- xts(forecasts, dates[(rolling.window):length(returns)])
 
 

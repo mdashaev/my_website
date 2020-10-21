@@ -1,7 +1,7 @@
 ---
 title: "Forecasting EUR/USD FX rate using ARIMA & GARCH"
 date: '2020-10-20'
-description: Here you can learn read my autobiography and CV
+description: Here I forecast EUR/USD FX rate to outperform Buy & Hold Strategy
 output:
   html_document: 
     df_print: paged
@@ -15,6 +15,188 @@ categories:
 - ''
 ---
 
+<link href="/rmarkdown-libs/anchor-sections/anchor-sections.css" rel="stylesheet" />
+<script src="/rmarkdown-libs/anchor-sections/anchor-sections.js"></script>
 
 
+<p>The investment strategy is quite simple: extrapolate a pattern from past data that will enable us to predict future returns. To do so, we will use two functions in R: Autoregressive Integrated Moving Average (ARIMA) and Generalized Autoregressive Conditional Heteroskedasticity (GARCH). They provide a statistical analysis model that uses time series data and helps to predict future trends. Using our skills learned in the Data Analytics for Finance course, we developed an algorithm in R (cf. code lines) that predicts a next day’s return by analyzing data from the last 1000 days.</p>
+<p>Depending on the outcome of the algorithm, the investment strategy will be either to go long or to short the FX rate: if the index analyzed is predicted to increase, there will be a buy - if supposed to decrease, a sale.</p>
+<p>We will run this algorithm on a 12-year time frame to have a clear view on what our returns can be. We will then benchmark this to the regular EUR/USD one to see if we were able to outperform a typical buy-and-hold strategy.</p>
+<p>First of all, we upload data from the Yahoo Finance using R function getSymbols(). Then we run the Augmented Dickey-Fuller test on the daily rates of EUR/USD to test it on stationarity. The null hypothesis is that time-series data is non-stationary while the alternative is that it is stationary. We observe that p-value = 0.01 so we do not reject the null hypothesis of non-stationarity. Thus, we take logarithms of each observation and then find the first difference. As a result, we have stationary data series.</p>
+<pre class="r"><code>### ARIMA/GARCH trading model
+  # get data and initialize objects to hold forecasts
+# EURUSD &lt;- read.csv(&#39;EURUSD=X&#39;, header = T)
 
+quantmod::getSymbols(&quot;EURUSD=X&quot;, from=&quot;2003-12-01&quot;, to = &quot;2020-10-16&quot;)</code></pre>
+<pre><code>## [1] &quot;EURUSD=X&quot;</code></pre>
+<pre class="r"><code>EURUSD &lt;- `EURUSD=X`
+EURUSD &lt;- rownames_to_column(as.data.frame(EURUSD), var = &quot;date&quot;)
+EURUSD[, 1] &lt;- as.Date(as.character(EURUSD[, 1]))
+
+#adf test
+aTSA::adf.test(EURUSD[,&quot;EURUSD=X.Close&quot;])</code></pre>
+<pre><code>## Augmented Dickey-Fuller Test 
+## alternative: stationary 
+##  
+## Type 1: no drift no trend 
+##       lag    ADF p.value
+##  [1,]   0 -0.299   0.558
+##  [2,]   1 -0.272   0.566
+##  [3,]   2 -0.268   0.567
+##  [4,]   3 -0.262   0.569
+##  [5,]   4 -0.277   0.564
+##  [6,]   5 -0.285   0.562
+##  [7,]   6 -0.289   0.561
+##  [8,]   7 -0.289   0.561
+##  [9,]   8 -0.299   0.558
+## [10,]   9 -0.304   0.557
+## Type 2: with drift no trend 
+##       lag   ADF p.value
+##  [1,]   0 -2.72  0.0752
+##  [2,]   1 -2.15  0.2680
+##  [3,]   2 -1.97  0.3416
+##  [4,]   3 -1.94  0.3529
+##  [5,]   4 -1.94  0.3527
+##  [6,]   5 -1.93  0.3546
+##  [7,]   6 -1.88  0.3746
+##  [8,]   7 -1.98  0.3370
+##  [9,]   8 -2.09  0.2938
+## [10,]   9 -2.04  0.3103
+## Type 3: with drift and trend 
+##       lag   ADF p.value
+##  [1,]   0 -3.54  0.0379
+##  [2,]   1 -2.90  0.1959
+##  [3,]   2 -2.70  0.2813
+##  [4,]   3 -2.68  0.2913
+##  [5,]   4 -2.66  0.2986
+##  [6,]   5 -2.64  0.3046
+##  [7,]   6 -2.59  0.3295
+##  [8,]   7 -2.69  0.2847
+##  [9,]   8 -2.80  0.2378
+## [10,]   9 -2.75  0.2594
+## ---- 
+## Note: in fact, p.value = 0.01 means p.value &lt;= 0.01</code></pre>
+<pre class="r"><code>#p-value = 0.01 so we do not reject the null hypothesis of x at 1% sign level
+
+returns &lt;- diff(log(EURUSD[,&quot;EURUSD=X.Close&quot;])) #calc difference in logs of eurusd data
+returns &lt;- na.omit(returns)
+# forecasts_eurusd &lt;- forecasts
+
+rolling.window &lt;- 1000
+forecast_length &lt;- length(returns) - rolling.window
+forecasts &lt;- vector(mode=&quot;numeric&quot;, length=forecast_length)</code></pre>
+<p>In our model we have used k=1000 and downloaded the data from Yahoo finance. For example, first we consider the period 1-1000 and predict the returns for the day 1001, then we take period 2-1001 and predict for the day 1002, and so on. We also do not take into account transaction costs and slippage (where computer signals to enter/exit, and where the actual entry/exit was). We use these 1000 days of pricing data to forecast the price of the next day. And we do that over and over, while rolling our window forward (hence rolling window forecast) for each forecast we look simultaneously for the best ARIMA model with the lowest AIC (Akaike Information Criterion), our integration value d is equal to zero (since we have already taken the difference between logarithms), hence we are actually fitting ARMA and not ARIMA models. After observing the right ARIMA model, we can feed this into the next step, finding the right GARCH model.</p>
+<p>Once this model specification step is completed, we can start to fit the ARIMA+GARCH model. R function ugarchfit() helps us here a lot as it optimizes the specification. In case the GARCH does not converge, we cannot say with certainty when the prediction is going to happen and need to guess the “long” entry point to the market. But if the model converges, then we have the date and the prediction. So far we have computed our forecasts and entry/exit points. What is now missing, are the returns. We will look at how to compute these in the following lines.</p>
+<pre class="r"><code># loop through every trading day, estimate optimal model parameters from rolling window
+# and predict next day&#39;s return
+
+for (i in 0:forecast_length) {
+  roll.returns &lt;- returns[(1+i):(rolling.window + i)] # create rolling window
+  final.aic &lt;- Inf
+  final.order &lt;- c(0,0,0)
+  
+  # estimate optimal ARIMA model order
+  
+  for (p in 0:5) for (q in 0:5) { # limit possible order to p,q &lt;= 5
+    
+    if (p == 0 &amp;&amp; q == 0) next # p and q can&#39;t both be zero
+    fitted_arima &lt;- tryCatch( arima(roll.returns, order = c(p,0,q)),
+                          error = function( err ) FALSE,
+                          warning = function( err ) FALSE )
+    
+    if (!is.logical( fitted_arima)) {
+      current.aic &lt;- AIC(fitted_arima)
+      if (current.aic &lt; final.aic) { # retain order if AIC is reduced
+        final.aic &lt;- current.aic
+        final.order &lt;- c(p,0,q)
+        final.arima &lt;- arima(roll.returns, order = (final.order))
+      }
+    }
+    else next
+  }
+  
+  spec = ugarchspec(variance.model = list(garchOrder=c(1,1)),
+                    mean.model = list(armaOrder = c(arimaorder(final.arima)[1], 
+                                                    arimaorder(final.arima)[3]), 
+                                      include.mean = T),
+                    distribution.model = &quot;sged&quot;)
+  
+  fit = tryCatch(ugarchfit(spec, roll.returns, solver = &#39;hybrid&#39;), 
+                 error = function(e) e, 
+                 warning = function(w) w)
+  
+  # calculate next day prediction from fitted mode
+  # model does not always converge - assign value of 0 to prediction and p.val in this case
+  if (is(fit, &quot;warning&quot;)) {
+    forecasts[i+1] &lt;- 0
+    print(0)
+    # p.val[i+1] &lt;- 0
+  }
+  
+  else {
+    
+    next.day.fore = ugarchforecast(fit, n.ahead = 1)
+    x = next.day.fore@forecast$seriesFor
+    forecasts[i+1] &lt;- x[1] # actual value of forecast
+    print(forecasts[i])
+
+      }
+  #understand what % completed
+  print(paste(i, round(i/length(forecasts)*100, 2), sep = &quot;,&quot;))
+}</code></pre>
+<p>The code above runs about 8 hours so I provide you with the <a href="https://www.dropbox.com/s/bv9fsw4l6njl6l8/eur_usd_forecast.csv?dl=0">output using the link</a>.</p>
+<pre class="r"><code>url &lt;- &quot;https://www.dropbox.com/s/bv9fsw4l6njl6l8/eur_usd_forecast.csv?raw=1&quot;
+
+forecasts &lt;- vroom::vroom(url, delim = &quot;,&quot;) # If vroom::vroom(url) doesn&#39;t work, use read_csv(url)
+
+#in order to save time import the result of the loop]]]
+forecasts &lt;- read.csv(&quot;~/eur_usd_forecast.csv&quot;, dec=&quot;,&quot;)
+forecasts[,1] &lt;- NULL #delete unnecessary variable
+colnames(forecasts) &lt;- c(&quot;forecast_returns&quot;)</code></pre>
+<p>In order to see what our strategy returns are, we need to calculate the intersection between both datasets, our forecasts and the real data, according to the date (date is the matching key). We finally multiply the real returns with our predicted trend (+/- sign) and obtain our results. In the last and final step we visualize and compare our returns with the naive buy-and-hold model, we can see that our model beats the naive model in the analyzed time frame.</p>
+<pre class="r"><code>dates &lt;- EURUSD$date
+forecasts.ts &lt;- xts(forecasts, dates[(rolling.window):length(returns)])
+
+
+# create lagged series of forecasts and sign of forecast
+
+lag.forecast &lt;- Lag(forecasts.ts, 1)
+#if lag of forecast &gt;0 then 1, &lt;0 -1, =0 also 0
+sign_forecast &lt;- ifelse(lag.forecast &gt; 0, 1, 
+                  ifelse(lag.forecast &lt; 0, -1, 0))
+
+# Create the ARIMA/GARCH returns for the directional system
+sign_forecast.returns &lt;- sign_forecast * returns[(rolling.window):length(returns)]
+sign_forecast.returns[1] &lt;- 0 # remove NA
+
+# Create the backtests for ARIMA/GARCH and Buy &amp; Hold
+cum_returns &lt;- cumsum( sign_forecast.returns)
+buy.hold.ts &lt;- xts(returns[(rolling.window):length(returns)], 
+                   dates[(rolling.window):length(returns)])
+buy.hold.curve &lt;- cumsum(buy.hold.ts)
+both.curves &lt;- cbind(cum_returns, buy.hold.curve)
+both.curves &lt;- rownames_to_column(as.data.frame(both.curves), var = &quot;date&quot;)
+names(both.curves) &lt;- c(&quot;date&quot;, &quot;strategy_returns&quot;, &quot;buy_and_hold_returns&quot;)
+
+both.curves$date &lt;- as.Date(both.curves$date)
+
+ggplot(data = both.curves, aes(x = date)) +
+  geom_line(aes(y = strategy_returns, group = 1, color = &quot;ARIMA + GARCH strategy&quot;)) +
+  geom_line(aes(y = buy_and_hold_returns, group = 1, color = &quot;Buy&amp;Hold strategy&quot;)) +
+  labs(xlab = &quot;Log returns&quot;) +
+  scale_color_manual(name = &quot;strategy&quot;,
+                     values = c(&quot;ARIMA + GARCH strategy&quot; = &quot;darkorange&quot;,
+                                &quot;Buy&amp;Hold strategy&quot; = &quot;blue&quot;))   +
+  theme_bw() +
+  theme(legend.position = &quot;bottom&quot;,
+        axis.text=element_text(size=10)) +
+  scale_x_date(date_breaks = &quot;12 months&quot;,
+               date_labels = &quot;%m-%Y&quot;) +
+  labs(x = &quot;Date&quot;,
+       y = &quot;Strategy returns&quot;,
+       title = &quot;ARIMA+GARCH Strategy outperforms Buy&amp;Hold during the 12-year period&quot;)</code></pre>
+<p><img src="/blogs/quant_strategy_files/figure-html/comparing_strategies-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>To better interpret our result, we compared the return of our investment strategy (the orange line) with another benchmark strategy, which is buy and hold the EUR/USD currency pairs (the blue line) over a 12-year horizon. From the chart, we could clearly see that while before 2015 the two strategies oscillated in a similar range without distinctive divergence, our strategy embarked on an outperformance over the naive strategy since 2015 March and is expected to maintain this advantage till the end of the 10-year investment cycle. Numerically speaking, the annual return of our strategic investment strategy peaked at around 25% during 2017 February and is expected to close at around 0% at 2020 end.</p>
+<p>More interestingly, the return of the investment strategy mirrored that of the naive strategy since the midterm, indicating a negative correlation between the two strategies - whereas the FX trading strategy continuously experienced loss, our investment strategy is expected to harvest a decent return when it draws to the end of the analyzed time frame. Therefore, we believe our model has constituted a worthwhile investment strategy for years ahead.</p>
+<p>To summarize, our hedge fund investment principle is quite straightforward - extrapolate a pattern from past data and use them as the main inputs to enable future return prediction. By comparing this strategy with the naive strategy which is to buy and hold the EUR/USD currency pairs, we detected a distinctive arbitrage opportunity using this model which is expected to generate an annualized return as high as 25% during the peak point whereas the downside return is capped at -15%. Therefore, we have high conviction in our model-generated strategy.</p>
+<p>Regarding the scope of our research, there still exists some limitations to be further improved. For example, the prediction model is not perfect as we use the empirical price data as the main plugs while don’t take into account economic cyclical factors and other maro risk factors. The prediction algorithm could also be further developed with some other tools (like eGARCH) or optimized if by adding some machine learning methodologies. Also, we intentionally restricted parameters of ARMA(p,q) to the maximum level of 5 for each because currently it requires 8 hours of computations. Another suggestion is to consider ARIMA models with higher values of parameters, different sizes of the rolling windows, and larger period of data. We may also further introduce more equity benchmarks for comparison purposes to better visualize the attractiveness of this strategy.</p>
