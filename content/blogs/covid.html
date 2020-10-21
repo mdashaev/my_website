@@ -26,7 +26,7 @@ categories:
 # URL link to CDC to download data
 url &lt;- &quot;https://data.cdc.gov/api/views/vbim-akqf/rows.csv?accessType=DOWNLOAD&quot;
 
-covid_data &lt;- vroom::vroom(url)%&gt;% # If vroom::vroom(url) doesn&#39;t work, use read_csv(url)
+covid_data &lt;- vroom::vroom(url) %&gt;% # If vroom::vroom(url) doesn&#39;t work, use read_csv(url)
   clean_names()</code></pre>
 <p>Given the data we have, I we would produce two graphs that show death % rate:</p>
 <ul>
@@ -96,5 +96,5 @@ ggplot(covid_grouped_icu, aes(x = age_group, y = death_rate)) +
              caption = &quot;Source: CDC&quot;,
              x = &quot;&quot;, 
              y = &quot;&quot;)</code></pre>
-<p><img src="/blogs/covid_files/figure-html/graph2-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p><img src="/blogs/covid_files/figure-html/graph2-1.png" width="100%" style="display: block; margin: auto;" /></p>
 <p>People that were admitted to ICU have much higher probability of death in each age group compared to those who were not admitted to ICU. Furthermore, with the increase in age probability of death from covid increases in both ICU groups.</p>
