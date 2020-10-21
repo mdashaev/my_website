@@ -186,7 +186,6 @@ ggplot(yield_curve_with_years,
 </div>
 <div id="month-and-10-year-yields-since-1999" class="section level3">
 <h3>3-month and 10-year yields since 1999</h3>
-<p><img src="/Users/MDCH/my_website/images/yield_curve3.png" width="100%" style="display: block; margin: auto;" /></p>
 <pre class="r"><code>#Creating new data frame with only 3m Treasury Bill and 10y Treasury Note, and years since 1999
 yield_curve_3m_10m &lt;- yield_curve %&gt;% 
   filter(date&gt;=&quot;1999-01-01&quot;, (maturity == &quot;3m&quot; | maturity == &quot;10y&quot;))
@@ -195,10 +194,10 @@ yield_curve_3m_10m &lt;- yield_curve %&gt;%
 ggplot(yield_curve_3m_10m, aes(x = date, y = price, color = var)) +
 #Choosing plot to be a line graph   
     geom_line() +
-#Choosing black and white theme   
-    theme_bw() +
+    scale_color_manual(values = c(&quot;darkorange&quot;, &quot;blue&quot;)) +
 #Removing legend title and bolding plot title
-    theme(legend.title = element_blank()) +
+    theme(legend.title = element_blank(),
+          legend.position = &quot;bottom&quot;) +
 #Setting plot and axis titles
     labs(y = &#39;%&#39;, title = &#39;Yields on 3-month and 10-year US Treasury rates since 1999&#39;, 
          caption = &quot;Source: St. Louis Federal Reserve Economic Database (FRED)&quot;, x = &quot;&quot;) +
@@ -265,7 +264,9 @@ ggplot(yield_curve_final, aes(x=date, y=difference)) +
 #Fixing x-axis labels and limits
   scale_x_date(date_breaks=&quot;2 years&quot;,labels=date_format(&quot;%Y&quot;), limits = c(as.Date(&quot;1959-01-01&quot;),as.Date(&quot;2023-01-01&quot;))) +
 #Bolding plot title and removing legend
-  theme(plot.title = element_text(face = &quot;bold&quot;), legend.position = &quot;none&quot;) +
+  theme(plot.title = element_text(face = &quot;bold&quot;), 
+        legend.position = &quot;none&quot;,
+        axis.text.x = element_text(angle = 45,hjust=1) )+
 #Creating y-intercept line at 0
   geom_hline(yintercept=0,color=&quot;black&quot;) +
 #Creating rugs at bottom of plot
@@ -276,5 +277,6 @@ ggplot(yield_curve_final, aes(x=date, y=difference)) +
   geom_ribbon(aes(ymin = difference, ymax = pmin(difference, 0)), fill= &quot;steelblue2&quot;, alpha=0.5) +
   geom_ribbon(aes(ymin = 0, ymax = pmin(difference, 0)),fill = &quot;red&quot;, alpha=0.5)</code></pre>
 <p><img src="/blogs/inversion_files/figure-html/yield_curve_challenge_plot-1.png" width="100%" style="display: block; margin: auto;" /></p>
+<p>As we can see, the red zones preceeded different crises. The largest percentage difference was occured in the period 1979-1981. The early 1980s recession is considered to have been the most severe recession since World War Two.</p>
 </div>
 </div>

@@ -175,11 +175,6 @@ ggplot(yield_curve_with_years,
 
 ### 3-month and 10-year yields since 1999
 
-```{r yield_curve_3, echo=FALSE, out.width="100%"}
-#What third plot should look like
-knitr::include_graphics(here::here("images", "yield_curve3.png"), error = FALSE)
-```
-
 
 ```{r yield_curve_3_plot,out.width="100%",fig.width=8, fig.height=4}
 
@@ -191,10 +186,10 @@ yield_curve_3m_10m <- yield_curve %>%
 ggplot(yield_curve_3m_10m, aes(x = date, y = price, color = var)) +
 #Choosing plot to be a line graph   
     geom_line() +
-#Choosing black and white theme   
-    theme_bw() +
+    scale_color_manual(values = c("darkorange", "blue")) +
 #Removing legend title and bolding plot title
-    theme(legend.title = element_blank()) +
+    theme(legend.title = element_blank(),
+          legend.position = "bottom") +
 #Setting plot and axis titles
     labs(y = '%', title = 'Yields on 3-month and 10-year US Treasury rates since 1999', 
          caption = "Source: St. Louis Federal Reserve Economic Database (FRED)", x = "") +
@@ -259,7 +254,9 @@ ggplot(yield_curve_final, aes(x=date, y=difference)) +
 #Fixing x-axis labels and limits
   scale_x_date(date_breaks="2 years",labels=date_format("%Y"), limits = c(as.Date("1959-01-01"),as.Date("2023-01-01"))) +
 #Bolding plot title and removing legend
-  theme(plot.title = element_text(face = "bold"), legend.position = "none") +
+  theme(plot.title = element_text(face = "bold"), 
+        legend.position = "none",
+        axis.text.x = element_text(angle = 45,hjust=1) )+
 #Creating y-intercept line at 0
   geom_hline(yintercept=0,color="black") +
 #Creating rugs at bottom of plot
@@ -271,4 +268,6 @@ ggplot(yield_curve_final, aes(x=date, y=difference)) +
   geom_ribbon(aes(ymin = 0, ymax = pmin(difference, 0)),fill = "red", alpha=0.5)
 
 ```
+
+As we can see, the red zones preceeded different crises. The largest percentage difference was occured in the period 1979-1981. The early 1980s recession is considered to have been the most severe recession since World War Two.
 
