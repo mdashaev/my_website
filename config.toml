@@ -138,16 +138,15 @@ disqusShortname = ""
   # Section Type Two
   [params.two]
     enable = true
-    title = "Massa libero"
-    subtitle = """Nullam et orci eu lorem consequat tincidunt vivamus et sagittis libero. 
-    Mauris aliquet magna magna sed nunc rhoncus pharetra. 
-    Pellentesque condimentum sem. In efficitur ligula tate urna. Maecenas laoreet massa vel lacinia pellentesque lorem ipsum dolor. 
-    Nullam et orci eu lorem consequat tincidunt. Vivamus et sagittis libero.
-    Mauris aliquet magna magna sed nunc rhoncus amet pharetra et feugiat tempus."""
+    title = "About me"
+    subtitle = """I come from an ethnic minority in Russia. I finished double degree programme 
+    at Higher School of Economics and University of London under academic direction of London School of Economics. 
+    During my bachelor years, I found charity fascinating and was involved in very interesting projects related to
+    visiting orphanages and bakery sales. I am now a Masters student at London Business School. I enjoy analyzing data and looking for hidden relationships between variables.
+    If you are interested in my projects you can find them on this website."""
     buttonText = "Get Started"
     url = "blogs"
-
-
+    
   # Contact section
   [params.contact]
     enable = true
@@ -180,7 +179,8 @@ disqusShortname = ""
 
     [[params.contact.address]]
     title = "Address"
-    city = "London"
+    street = "London Business School, Regent's Park"
+    city = "London, NW1 4SA"
     country = "United Kingdom"
 
   # Footer section
