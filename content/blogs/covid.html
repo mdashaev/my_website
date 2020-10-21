@@ -1,0 +1,100 @@
+---
+title: "What about covid?"
+date: '2020-10-20'
+description: Analysis of Covid stats by ICU admission and comorbidities
+output:
+  html_document:
+    df_print: paged
+  pdf_document: default
+image: "pic03.jpg"
+keywords: ''
+draft: no
+slug: covid
+categories:
+- ''
+- ''
+---
+
+<link href="/rmarkdown-libs/anchor-sections/anchor-sections.css" rel="stylesheet" />
+<script src="/rmarkdown-libs/anchor-sections/anchor-sections.js"></script>
+
+
+<p>Let us consider <a href="https://data.cdc.gov/Case-Surveillance/COVID-19-Case-Surveillance-Public-Use-Data/vbim-akqf">CDC Covid-19 Case Surveillance Data</a>. There are well over 3 million entries of individual, de-identified patient data. Since this is a large file, we will use <code>vroom</code> to load it and keep <code>cache=TRUE</code> in the chunk options.</p>
+<pre class="r"><code># file contains 11 variables and 3.66m rows and is well over 380Mb. 
+# It will take time to download
+
+# URL link to CDC to download data
+url &lt;- &quot;https://data.cdc.gov/api/views/vbim-akqf/rows.csv?accessType=DOWNLOAD&quot;
+
+covid_data &lt;- vroom::vroom(url)%&gt;% # If vroom::vroom(url) doesn&#39;t work, use read_csv(url)
+  clean_names()</code></pre>
+<p>Given the data we have, I we would produce two graphs that show death % rate:</p>
+<ul>
+<li>by age group, sex, and whether the patient had co-morbidities or not</li>
+<li>by age group, sex, and whether the patient was admited to Intensive Care Unit (ICU) or not.</li>
+</ul>
+<p>First, let’s plot the first graph:</p>
+<pre class="r"><code># knitr::include_graphics(here::here(&quot;images&quot;, &quot;covid_death_rate_comorbidities.png&quot;), error = FALSE)
+# knitr::include_graphics(here::here(&quot;images&quot;, &quot;covid_death_rate_icu.png&quot;), error = FALSE)
+
+#first, we will clean the data by replacing Missing and Unknown to NA
+
+covid_data_cleaned &lt;- covid_data %&gt;% 
+                          mutate(
+                            death_yn = ifelse(death_yn == &quot;Yes&quot;, 1,
+                                            ifelse(death_yn == &quot;No&quot;, 0, NA)),
+                            sex = ifelse(sex == &#39;Missing&#39; | sex == &quot;Unknown&quot; | sex == &quot;Other&quot;, NA, sex),
+                            age_group = ifelse(age_group == &quot;Unknown&quot;, NA, age_group),
+                            medcond_yn = ifelse(medcond_yn == &quot;Yes&quot;, &quot;With comorbidities&quot;, 
+                                            ifelse(medcond_yn == &quot;No&quot;, &quot;Without comorbidities&quot;, NA)),
+                            icu_yn = ifelse(icu_yn == &quot;Yes&quot;, &quot;Admitted to ICU&quot;, 
+                                            ifelse(icu_yn == &quot;No&quot;, &quot;No ICU&quot;, NA)))
+
+
+
+#secondly, we calc death rate by age_group, medcond_yn, sex
+
+covid_grouped_medcond &lt;- covid_data_cleaned %&gt;% 
+                            dplyr::filter(!is.na(age_group) &amp; !is.na(medcond_yn) &amp; !is.na(sex) &amp; !is.na(death_yn)) %&gt;% 
+                            group_by(age_group, sex, medcond_yn) %&gt;% 
+                            dplyr::summarize(death_rate = sum(death_yn, na.rm = T)/n()) 
+
+ggplot(covid_grouped_medcond, aes(x = age_group, y = death_rate)) +
+        geom_col(show.legend = FALSE, fill = &quot;dodgerblue4&quot;, alpha = 0.7) +
+        facet_grid(medcond_yn ~ sex) +
+        coord_flip() +
+        scale_x_reordered() +
+        theme_bw() +
+        geom_text(aes(label = sprintf(&quot;%1.1f&quot;, 100*death_rate)), size = 3, hjust = -0.1) +
+        scale_y_continuous(labels = scales::percent_format(accuracy = 1L),
+                           breaks = c(0, 0.2, 0.4, 0.6)) +
+        labs(title = &quot;Covid death % by age group, sex, and presence of comorbidities&quot;,
+             caption = &quot;Source: CDC&quot;,
+             x = &quot;&quot;, 
+             y = &quot;&quot;)</code></pre>
+<p><img src="/blogs/covid_files/figure-html/covid_challenge-1.png" width="100%" style="display: block; margin: auto;" /></p>
+<p>As we can see, people aged 60+ have the highest death rates from covid among all age groups. With the increase in age the risk to die from covid only increases. People that have co-morbidities have also higher death risks than without.</p>
+<pre class="r"><code>covid_grouped_icu &lt;- covid_data_cleaned %&gt;% 
+                            dplyr::filter(!is.na(age_group) &amp; 
+                                   !is.na(icu_yn) &amp; 
+                                   !is.na(sex) &amp; 
+                                   !is.na(death_yn) &amp; 
+                                   !is.na(medcond_yn) ) %&gt;% 
+                            group_by(age_group, sex, icu_yn) %&gt;% 
+                            dplyr::summarize(death_rate = sum(death_yn, na.rm = T)/n()) 
+
+ggplot(covid_grouped_icu, aes(x = age_group, y = death_rate)) +
+        geom_col(show.legend = FALSE, fill = &quot;#FF3300&quot;, alpha = 0.6) +
+        facet_grid(icu_yn ~ sex) +
+        coord_flip() +
+        theme_bw() +
+        scale_x_reordered() +
+        geom_text(aes(label = sprintf(&quot;%1.1f&quot;, 100*death_rate)), size = 2.7, hjust = -0.1) +
+        scale_y_continuous(labels = scales::percent_format(accuracy = 1L),
+                           breaks = c(0, 0.2, 0.4, 0.6, 0.8)) +
+        labs(title = &quot;Covid death % by age group, sex, and whether patient was admitted to ICU&quot;,
+             caption = &quot;Source: CDC&quot;,
+             x = &quot;&quot;, 
+             y = &quot;&quot;)</code></pre>
+<p><img src="/blogs/covid_files/figure-html/graph2-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>People that were admitted to ICU have much higher probability of death in each age group compared to those who were not admitted to ICU. Furthermore, with the increase in age probability of death from covid increases in both ICU groups.</p>

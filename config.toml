@@ -33,7 +33,7 @@ disqusShortname = ""
   # 404 error customization
   [params.error404]
     heading = "Page couldn't be found"
-    text = "Please visit [this page](/)"
+    text = "Please feel free to drop me an e-mail midashaev@gmail.com or give a call +44 7803 073492"
 
   # Navigation Section
   [params.navigation]
@@ -51,13 +51,13 @@ disqusShortname = ""
       name = "Blogs"
       url = "blogs"
 
-    [[params.navigation.links]]
-      name = "Generic Blog"
-      url = "blogs/ipsum"
+    #[[params.navigation.links]]
+     # name = "Generic Blog"
+      #url = "blogs/ipsum"
 
-    [[params.navigation.links]]
-      name = "Elements"
-      url = "elements.html"
+    #[[params.navigation.links]]
+     # name = "Elements"
+    #  url = "elements.html"
 
     # Add custom links here by uncommenting code below. To remove links just delete
     # the [[params.navigation.links]] map associated with that link. Copy and paste
@@ -72,9 +72,9 @@ disqusShortname = ""
       url = "blogs"
 
     # Button Style 2
-    [[params.navigation.button2]]
-      name = "Log In"
-      url = "#"
+    #[[params.navigation.button2]]
+     # name = "Log In"
+      #url = "#"
 
 
   # Banner section
@@ -82,8 +82,8 @@ disqusShortname = ""
     # To change the background image on the homepage banner, replace 'banner.jpg' in
     # the 'static/img' folder.
     title = "Hi, my name is Muslim. Nice to meet you!"
-    subtitle = "Here you can find more about me and my projects"
-    buttonText = "Get Started"
+    subtitle = "I am an aspiring financial professional who is passionate about Data Analytics"
+    buttonText = "Learn more"
 
 
   # Tiles Section
@@ -104,10 +104,10 @@ disqusShortname = ""
       url = "blogs/quant_strategy"
 
     [[params.tiles.showcase]]
-      title = "Airbnb Analysis"
-      subtitle = "Analysis of property prices in Hong Kong"
+      title = "What about Covid?"
+      subtitle = "Analysis of Covid stats by ICU admission and comorbidities"
       image = "pic03.jpg"
-      url = "blogs/airbnb"
+      url = "blogs/covid"
 
     [[params.tiles.showcase]]
       title = "Comparing GDP of different countries"
@@ -141,8 +141,8 @@ disqusShortname = ""
     title = "About me"
     subtitle = """I come from an ethnic minority in Russia. I finished double degree programme 
     at Higher School of Economics and University of London under academic direction of London School of Economics. 
-    During my bachelor years, I found charity fascinating and was involved in very interesting projects related to
-    visiting orphanages and bakery sales. I am now a Masters student at London Business School. I enjoy analyzing data and looking for hidden relationships between variables.
+    During my bachelor years, I found charity fascinating and was involved in exciting projects with a potential to create an impact related to
+    visiting orphanages and bakery sales. Furthermore, I have full-time experience in Quantitative Risk Management and Project Valuation. I am now a Masters student at London Business School. I enjoy analyzing data and looking for hidden relationships between variables.
     If you are interested in my projects you can find them on this website."""
     buttonText = "Get Started"
     url = "blogs"

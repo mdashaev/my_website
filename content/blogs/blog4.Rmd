@@ -3,10 +3,10 @@ title: "GDP components over time and among countries"
 date: '2020-10-20'
 description: Comparing countries by GDP components over time
 output:
-  pdf_document: default
   html_document:
     df_print: paged
-image: ''
+  pdf_document: default
+image: "pic04.jpg"
 keywords: ''
 draft: no
 slug: project4
