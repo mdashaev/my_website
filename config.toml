@@ -82,8 +82,8 @@ disqusShortname = ""
     # To change the background image on the homepage banner, replace 'banner.jpg' in
     # the 'static/img' folder.
     title = "Hi, my name is Muslim. Nice to meet you!"
-    subtitle = "I am an aspiring financial professional who is passionate about Data Analytics"
-    buttonText = "Get started"
+    subtitle = "I am an aspiring financial student at London Business school who is passionate about Data Analytics and Investment Management"
+    buttonText = "Learn more"
 
 
   # Tiles Section
@@ -96,6 +96,12 @@ disqusShortname = ""
       subtitle = "My CV and biography"
       image = "shorten_photo.png"
       url = "blogs/me"
+    
+    [[params.tiles.showcase]]
+      title = "Academic research"
+      subtitle = "My Bachelor's thesis"
+      image = "thesis.png"
+      url = "blogs/Demand uncertainty and ZL firms final.pdf"
 
     [[params.tiles.showcase]]
       title = "ARIMA+GARCH strategy"
