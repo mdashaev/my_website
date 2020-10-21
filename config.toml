@@ -99,7 +99,7 @@ disqusShortname = ""
     
     [[params.tiles.showcase]]
       title = "Academic research"
-      subtitle = "My Bachelor's thesis"
+      subtitle = "In Bachelor's thesis I researched how demand uncertainty in industry affects decision of a firm to become zero leverage"
       image = "thesis.jpg"
       url = "blogs/Demand uncertainty and ZL firms final.pdf"
 
