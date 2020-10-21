@@ -151,5 +151,6 @@ ggplot(covid_grouped_icu, aes(x = age_group, y = death_rate)) +
 ```
 
 
-People that were admitted to ICU have much higher probability of death in each age group compared to those who were not admitted to ICU. Furthermore, with the increase in age probability of death from covid increases in both ICU groups.
+On average, among those who were admitted to ICU male have higher death rates than compared to those of female. The same pattern holds also for those who were not admitted to ICU. Furthermore, with the increase in age probability of death from covid increases in both ICU groups.
+
 
