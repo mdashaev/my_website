@@ -115,6 +115,12 @@ disqusShortname = ""
       image = "pic04.jpg"
       url = "blogs/project4"
 
+    [[params.tiles.showcase]]
+      title = "Yield curve inversion"
+      subtitle = "Analysis of inversion of the yield curve"
+      image = "inverse.jpg"
+      url = "blogs/inversion"
+
     #[[params.tiles.showcase]]
       #title = "Consequat"
       #subtitle = "Ipsum Dolor Sit Amet"
