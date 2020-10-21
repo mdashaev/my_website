@@ -20,7 +20,7 @@ disqusShortname = ""
 
   # Provide your metadata here.
   name = "Muslim Dashaev"
-  description = "Here you can find my CV and my projects"
+  description = "Here you can discover my CV and learn more about projects in Data Analytics and Finance"
 
   # Link custom assets relative to /static
   custom_css = []
@@ -105,7 +105,7 @@ disqusShortname = ""
 
     [[params.tiles.showcase]]
       title = "ARIMA+GARCH trading strategy"
-      subtitle = "My constructed quantitative trading strategy for EUR/USD FX rate to outperform the Buy & Hold strategy"
+      subtitle = "My constructed quantitative trading strategy for EUR/USD FX rate to outperform the Buy &Hold strategy"
       image = "pic02.jpg"
       url = "blogs/quant_strategy"
 
