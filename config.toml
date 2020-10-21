@@ -83,7 +83,7 @@ disqusShortname = ""
     # the 'static/img' folder.
     title = "Hi, my name is Muslim. Nice to meet you!"
     subtitle = "I am an aspiring financial professional who is passionate about Data Analytics"
-    buttonText = "Learn more"
+    buttonText = "Get started"
 
 
   # Tiles Section

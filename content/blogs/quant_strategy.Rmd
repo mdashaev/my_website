@@ -56,11 +56,15 @@ library(aTSA)
 
 ```
 
+# Trading Strategy
+
 The investment strategy is quite simple: extrapolate a pattern from past data that will enable us to predict future returns. To do so, we will use two functions in R: Autoregressive Integrated Moving Average (ARIMA) and Generalized Autoregressive Conditional Heteroskedasticity (GARCH). They provide a statistical analysis model that uses time series data and helps to predict future trends. Using our skills learned in the Data Analytics for Finance course, we developed an algorithm in R (cf. code lines) that predicts a next day’s return by analyzing data from the last 1000 days.
 
 Depending on the outcome of the algorithm, the investment strategy will be either to go long or to short the FX rate: if the index analyzed is predicted to increase, there will be a buy - if supposed to decrease, a sale.
 
 We will run this algorithm on a 12-year time frame to have a clear view on what our returns can be. We will then benchmark this to the regular EUR/USD one to see if we were able to outperform a typical buy-and-hold strategy.
+
+# Constructing our strategy
 
 First of all, we upload data from the Yahoo Finance using R function getSymbols(). Then we run the Augmented Dickey-Fuller test on the daily rates of EUR/USD to test it on stationarity. The null hypothesis is that time-series data is non-stationary while the alternative is that it is stationary. We observe that p-value = 0.01 so we do not reject the null hypothesis of non-stationarity. Thus, we take logarithms of each observation and then find the first difference. As a result, we have stationary data series.
 
@@ -220,6 +224,8 @@ ggplot(data = both.curves, aes(x = date)) +
        title = "ARIMA+GARCH Strategy outperforms Buy&Hold during the 12-year period")
 
 ```
+
+# The results
 
 To better interpret our result, we compared the return of our investment strategy (the orange line) with another benchmark strategy, which is buy and hold the EUR/USD currency pairs (the blue line) over a 12-year horizon. From the chart, we could clearly see that while before 2015 the two strategies oscillated in a similar range without distinctive divergence, our strategy embarked on an outperformance over the naive strategy since 2015 March and is expected to maintain this advantage till the end of the 10-year investment cycle. Numerically speaking, the annual return of our strategic investment strategy peaked at around 25% during 2017 February and is expected to close at around 0% at 2020 end. 
 
