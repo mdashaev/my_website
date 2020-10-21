@@ -175,7 +175,7 @@ colnames(forecasts) <- c("forecast_returns")
 
 In order to see what our strategy returns are, we need to calculate the intersection between both datasets, our forecasts and the real data, according to the date (date is the matching key). We finally multiply the real returns with our predicted trend (+/- sign) and obtain our results. In the last and final step we visualize and compare our returns with the naive buy-and-hold model, we can see that our model beats the naive model in the analyzed time frame.  
 
-```{r comparing_strategies}
+```{r comparing_strategies, out.width= "100", fig.height= 6, fig.width= 9, fig.align="center"}
 
 dates <- EURUSD$date
 forecasts.ts <- xts(forecasts, dates[(rolling.window):length(returns)])
