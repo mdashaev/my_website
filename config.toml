@@ -82,7 +82,7 @@ disqusShortname = ""
     # To change the background image on the homepage banner, replace 'banner.jpg' in
     # the 'static/img' folder.
     title = "Hi, my name is Muslim. Nice to meet you!"
-    subtitle = "I am an aspiring financial student at London Business school who is passionate about Data Analytics and Investment Management"
+    subtitle = "I am an aspiring financial professional at London Business school who is passionate about Data Analytics and Investment Management"
     buttonText = "Learn more"
 
 
@@ -104,14 +104,14 @@ disqusShortname = ""
       url = "blogs/Demand uncertainty and ZL firms final.pdf"
 
     [[params.tiles.showcase]]
-      title = "ARIMA+GARCH strategy"
-      subtitle = "My constructed quantitative trading strategy"
+      title = "ARIMA+GARCH trading strategy"
+      subtitle = "My constructed quantitative trading strategy for EUR/USD FX rate to outperform the Buy & Hold strategy"
       image = "pic02.jpg"
       url = "blogs/quant_strategy"
 
     [[params.tiles.showcase]]
       title = "What about Covid?"
-      subtitle = "Analysis of Covid stats by ICU admission and comorbidities"
+      subtitle = "How presence of ICU admssion or comorbidities affect death rates of covid?"
       image = "pic03.jpg"
       url = "blogs/covid"
 
@@ -122,7 +122,7 @@ disqusShortname = ""
       url = "blogs/project4"
 
     [[params.tiles.showcase]]
-      title = "Yield curve inversion"
+      title = "Can inverse yield curve predict a recession?"
       subtitle = "Analysis of inversion of the yield curve"
       image = "inverse.jpg"
       url = "blogs/inversion"

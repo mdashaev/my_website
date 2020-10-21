@@ -269,5 +269,5 @@ ggplot(yield_curve_final, aes(x=date, y=difference)) +
 
 ```
 
-As we can see, the red zones preceeded different crises. The largest percentage difference was occured in the period 1979-1981. The early 1980s recession is considered to have been the most severe recession since World War Two.
+As we can see, the red zones preceeded different crises. The largest percentage difference was occured in the period 1979-1981. The early 1980s recession is considered to have been the most severe recession since World War Two. Therefore, a flatten of the yield curve can be a possible indicator of an upcoming recession.
 
